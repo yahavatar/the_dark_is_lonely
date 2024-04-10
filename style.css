@@ -1,0 +1,12 @@
+body{
+    background-color: black;
+    color: limegreen;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+#user-input{
+    background-color: black;
+    border: 0;
+    color: limegreen;
+    font-size: 17px;
+    outline:0;
+}
