@@ -49,22 +49,29 @@ function parse_input(){
 
     //Look for feature commands
     let features = room.features;
+    console.log(features);
     for (let i = 0; i < features.length; i++){
-        for (let j = 0; j < features[i].cmd.length; j++){
-            if (input == features[i].cmd[j]){
-                console.log("Feature command found: " + features[i].cmd[j]);
-                let success_actions = features[i].success_actions;
-                for (let k = 0; k < success_actions.length; k++){
-                    let action = success_actions[k];
-                    switch(action.type){
-                        case "response":
-                            response_show(action.value);
-                            break;
-                        case "flag_set":
-                            lSet(action.value, 1);
-                            break;
+        console.log(features[i]);
+        for (let j = 0; j < features[i].actions.length; j++){
+            console.log(features[i].actions[j]);
+            for (let k = 0; k < features[i].actions[j].cmd.length; k++){
+                console.log(features[i].actions[j].cmd[k]);
+                if (input == features[i].actions[j].cmd[k]){
+                    console.log("Match!" + input);
+                    let success_actions = features[i].actions[j].success_actions;
+                    for (let l = 0; l < success_actions.length; l++){
+                        console.log(success_actions[l]);
+                        let action = success_actions[l];
+                        switch(action.type){
+                            case "response":
+                                response_show(action.value);
+                                break;
+                            case "flag_set":
+                                lSet(action.value, 1);
+                                break;
+                        }
+                        return;
                     }
-                    return;
                 }
             }
         }
