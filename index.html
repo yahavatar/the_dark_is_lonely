@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>The Dark is Lonely 0.2</title>
+        <!--<link rel="stylesheet" type="text/css" href="style.css">-->
+        <script src="mj_if_engine.js"></script>
+        <script src="the_dark_is_lonely_objects.js"></script>
+        <script src="the_dark_is_lonely_rooms.js"></script>
+        <link rel="stylesheet" href="the_dark_is_lonely.css">
+    </head>
+    <body></body>
+</html>
+
+<script>
+    window.onload = function() {
+        console.log("window.onload()");
+        window.game_key = "the_dark_is_lonely";
+        screen_setup();
+        if (lGet("game_is_loaded") == null){
+            game_load();
+        } else {
+            game_play();
+        }
+    }
+    function game_load(){
+        console.log("game_load()");
+
+        //Set some starting values
+        lSet("current_room", 'room_0001');
+        //lSet("game_is_loaded", 1);
+        lSet("moves", "0");
+        lSet("score", 0);
+        lSet("title", "The Dark is Lonely");
+
+        objects_load();                         //Load Objects
+        //load_npcs();                            //Load NPCs
+        rooms_load();                           //Load Rooms
+        
+        room_look();                            //Begin!
+    }
+    function game_play(){
+        console.log("game_play()");
+    }
+    //Setup Game (This is temporary for testing only. This whole file will NOT be part of finished game engine.)
+
+</script>
+
+
