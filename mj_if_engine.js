@@ -12,7 +12,6 @@ function lSet(key, value){
 function lDel(key){
     localStorage.removeItem(window.game_key + "." + key);
 }
-
 //Mark:: parse_input
 function parse_input(){
     console.log("parse_input()");
@@ -48,16 +47,37 @@ function parse_input(){
         }
     }
 
+    //Look for feature commands
+    let features = room.features;
+    for (let i = 0; i < features.length; i++){
+        for (let j = 0; j < features[i].cmd.length; j++){
+            if (input == features[i].cmd[j]){
+                console.log("Feature command found: " + features[i].cmd[j]);
+                let success_actions = features[i].success_actions;
+                for (let k = 0; k < success_actions.length; k++){
+                    let action = success_actions[k];
+                    switch(action.type){
+                        case "response":
+                            response_show(action.value);
+                            break;
+                        case "flag_set":
+                            lSet(action.value, 1);
+                            break;
+                    }
+                    return;
+                }
+            }
+        }
+    }
+
     response_show("I don't understand that command.");
 
 }
-
 function obj_load(obj){
     let obj_id = obj.id;
     console.log("object loaded: " + obj_id );
     lSet(obj_id,  JSON.stringify(obj));
 }
-
 function room_look(){
     console.log("room_look()");
     //Describe the room, exits, and features
@@ -77,11 +97,20 @@ function room_look(){
     let features = room.features;
     for (let i = 0; i < features.length; i++){
         response += " " + features[i].desc;
+        //Process feature conditions
+        let conditions = features[i].conditions;
+        for (let j = 0; j < conditions.length; j++){
+            let flag = conditions[j].flag;
+            let value = conditions[j].value;
+            let true_response = conditions[j].true;
+            if (lGet(flag) == value){
+                response += " " + true_response;
+            }
+        }
     }
 
     response_show(response);
 }
-
 function screen_setup(){
     document.body.innerHTML = `
         <div id="header">
@@ -111,14 +140,12 @@ function screen_setup(){
         }
     });
 }
-
 function response_show(message){
     console.log("response_show(" + message+ ")");
     let history = document.getElementById("history");
     history.innerHTML += "<br>" + message
 
 }
-
 function user_input_clear(){
     document.getElementById("user-input").value = "";
 }
