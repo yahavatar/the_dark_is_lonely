@@ -15,6 +15,7 @@ function lDel(key){
 //Mark:: parse_input
 function parse_input(){
     console.log("parse_input()");
+    let took_action = 0;
     let input_original = document.getElementById("user-input").value;
     let input = document.getElementById("user-input").value.toLowerCase().trim();   //Lowercase() and trim() the input
     input = input.replace(/[!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]/g, '');               //Remove punctuation
@@ -27,7 +28,10 @@ function parse_input(){
     switch(input){
         case "l":
         case "look":
+        
+        case "search":
             room_look();
+            took_action = 1;
             return;
     }
 
@@ -39,6 +43,7 @@ function parse_input(){
     for (let i = 0; i < exits.length; i++){
         for (let j = 0; j < exits[i].cmd.length; j++){
             if (input == exits[i].cmd[j]){
+                took_action = 1;
                 let dest = exits[i].dest;
                 lSet("current_room", dest);
                 room_look();
@@ -57,6 +62,7 @@ function parse_input(){
             for (let k = 0; k < features[i].actions[j].cmd.length; k++){
                 console.log(features[i].actions[j].cmd[k]);
                 if (input == features[i].actions[j].cmd[k]){
+                    took_action = 1;
                     console.log("Match!" + input);
                     let success_actions = features[i].actions[j].success_actions;
                     for (let l = 0; l < success_actions.length; l++){
@@ -71,11 +77,11 @@ function parse_input(){
                                 break;
                         }
                     }
-                    return;
                 }
             }
         }
     }
+    if (took_action == 1){ return; }
 
     response_show("That command is either unknown or can't be executed here.");
 
