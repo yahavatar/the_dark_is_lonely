@@ -70,8 +70,8 @@ function parse_input(){
                                 lSet(action.value, 1);
                                 break;
                         }
-                        return;
                     }
+                    return;
                 }
             }
         }
@@ -109,7 +109,7 @@ function room_look(){
         for (let j = 0; j < conditions.length; j++){
             let flag = conditions[j].flag;
             let value = conditions[j].value;
-            let true_response = conditions[j].true;
+            let true_response = conditions[j].true_response;
             if (lGet(flag) == value){
                 response += " " + true_response;
             }

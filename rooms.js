@@ -100,5 +100,21 @@ obj_load({
     features: [],
 });
 //================================================================================================================================================================
+obj_load({
+    id: "room_0004",
+    desc_brief: "Room 4, Mouldy crypt.",
+    desc_full: "A mouldy crypt with a stone sarcophagus in the center of the room.",
+    desc_visited: "Empty Treasure Vault",
+    flag_visited: 0,
+    exits: [
+        {
+            cmd: ["w","west","go w","go west","open west door","open w door","open west doorway","open w doorway","open west","open w"],
+            desc: "Secure doorway leading West.",
+            dest: "room_0002",
 
+        }
+    ],
+    features: [],
+});
+//================================================================================================================================================================
 }
