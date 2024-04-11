@@ -77,7 +77,7 @@ function parse_input(){
         }
     }
 
-    response_show("I don't understand that command.");
+    response_show("That command is either unknown or can't be executed here.");
 
 }
 function obj_load(obj){

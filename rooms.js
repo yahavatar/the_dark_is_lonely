@@ -29,7 +29,7 @@ obj_load({
     flag_visited: 0,
     exits: [
         { 
-            cmd: ["e","east","go e","go east","open east door","open e door","open east doorway","open e doorway","open east","open e"],
+            cmd: ["e","east","go e","go east"],
             desc: "You see a small doorway leading east.",
             dest: "room_0003",
             checks:[],
