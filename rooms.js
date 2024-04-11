@@ -24,7 +24,7 @@ lSet("flag.warrior_statue_pushed", 0);
 obj_load({
     id: "room_0002",
     desc_brief: "Room 2, small antechamber.",
-    desc_full: "This is small antechabmer. The celinigs are high and draped with cobwebs. The walls are covered in a thick layer of dust.",
+    desc_full: "This is small antechabmer. The ceilings are high and draped with cobwebs. The walls are covered in a thick layer of dust.",
     desc_visited: "High-celinged antechamber with cobwebs and dust.",
     flag_visited: 0,
     exits: [
