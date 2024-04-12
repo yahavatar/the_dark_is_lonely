@@ -28,7 +28,6 @@ function parse_input(){
     switch(input){
         case "l":
         case "look":
-        
         case "search":
             room_look();
             took_action = 1;
@@ -56,24 +55,39 @@ function parse_input(){
     let features = room.features;
     console.log(features);
     for (let i = 0; i < features.length; i++){
-        console.log(features[i]);
-        for (let j = 0; j < features[i].actions.length; j++){
-            console.log(features[i].actions[j]);
-            for (let k = 0; k < features[i].actions[j].cmd.length; k++){
-                console.log(features[i].actions[j].cmd[k]);
-                if (input == features[i].actions[j].cmd[k]){
+        console.log("feature: ", features[i].desc);
+        for (let j = 0; j < features[i].commands.length; j++){
+            console.log("command: ", features[i].commands[j].desc);
+            for (let k = 0; k < features[i].commands[j].match_phrases.length; k++){
+                let match_phrase = features[i].commands[j].match_phrases[k];
+                console.log("check command phrase:", match_phrase);
+                if (input == match_phrase){
                     took_action = 1;
-                    console.log("Match!" + input);
-                    let success_actions = features[i].actions[j].success_actions;
-                    for (let l = 0; l < success_actions.length; l++){
-                        console.log(success_actions[l]);
-                        let action = success_actions[l];
+
+                    //Make sure no pre-action checks fail
+                    let pre_action_checks = features[i].commands[j].pre_action_checks;
+                    for (let l = 0; l < pre_action_checks.length; l++){
+                        let check = pre_action_checks[l];
+                        switch(check.type){
+                            case "flag_check":
+                                if (lGet(check.flag) == check.value){
+                                    response_show(check.failed_response);
+                                    return;
+                                }
+                                break;
+                        }
+                    }
+                    //Execute all actions
+                    let actions = features[i].commands[j].actions;
+                    for (let l = 0; l < actions.length; l++){
+                        console.log("action:", actions[l].type);
+                        let action = actions[l];
                         switch(action.type){
                             case "response":
-                                response_show(action.value);
+                                response_show(action.text);
                                 break;
                             case "flag_set":
-                                lSet(action.value, 1);
+                                lSet(action.flag, action.value);
                                 break;
                         }
                     }
@@ -82,8 +96,7 @@ function parse_input(){
         }
     }
     if (took_action == 1){ return; }
-
-    response_show("That command is either unknown or can't be executed here.");
+    response_show("That command is unknown or meaningless at this time...");
 
 }
 function obj_load(obj){
@@ -110,12 +123,12 @@ function room_look(){
     let features = room.features;
     for (let i = 0; i < features.length; i++){
         response += " " + features[i].desc;
-        //Process feature conditions
-        let conditions = features[i].conditions;
-        for (let j = 0; j < conditions.length; j++){
-            let flag = conditions[j].flag;
-            let value = conditions[j].value;
-            let true_response = conditions[j].true_response;
+        //Process feature checks
+        let checks = features[i].checks;
+        for (let j = 0; j < checks.length; j++){
+            let flag = checks[j].flag;
+            let value = checks[j].value;
+            let true_response = checks[j].true_response;
             if (lGet(flag) == value){
                 response += " " + true_response;
             }

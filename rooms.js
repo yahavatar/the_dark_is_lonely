@@ -4,18 +4,23 @@ function rooms_load(){
 //================================================================================================================================================================
 obj_load({
     id: "room_0001",
-    flag_visited: 0,
-    name: "Room 1",
-    desc_brief: "Room 1",
-    desc_full: "This is room 1.",
-    exits: [
-        { 
-            cmd: ["e","east","go e","go east","open east door","open e door","open east doorway","open e doorway","open east","open e"],
-            desc: "You see a small doorway leading East.",
-            dest: "room_0002",
+    desc_full: "This is room 1. It is a featureless, barren room.",
+    desc_visited: "Room 1",
+    flag_visited: 1,
+    contents: [
+        {   desc: "A plain doorway leading East.",
+            pre_discovery_checks:[],
+            commands: [
+                {   desc: "Use East doorway",
+                    match_phrase: ["e","east","go e","go east"],
+                    pre_action_checks: [],
+                    actions: [
+                        {type: "move", destination: "room_0002"},
+                    ],
+                }
+            ],
         }
     ],
-    features: [],
 });
 //================================================================================================================================================================
 lSet("flag.warrior_statue_examined", 0);
@@ -23,10 +28,66 @@ lSet("flag.warrior_statue_pushed", 0);
 
 obj_load({
     id: "room_0002",
-    desc_brief: "Room 2, small antechamber.",
     desc_full: "This is small antechabmer. The ceilings are high and draped with cobwebs. The walls are covered in a thick layer of dust.",
     desc_visited: "High-celinged antechamber with cobwebs and dust.",
     flag_visited: 0,
+    contents: [
+        {   desc: "A secured doorway leading east.",
+            pre_discovery_checks:[],
+            commands: [
+                {   desc: "Use East doorway.",
+                    match_phrases: ["e","east","go e","go east"],
+                    pre_action_checks: [],
+                    actions: [
+                        {type: "move", destination: "room_0003"},
+                    ],
+                },
+            ]
+        },
+        {   desc: "A plain doorway leading West.",
+            pre_discovery_checks:[
+                
+            ],
+            commands: [
+                {
+                    desc: "Use West doorway.",
+                    match_phrases: ["w","west","go w","go west","open west door","open w door","open west doorway","open w doorway","open west","open w"],
+                    pre_action_checks: [
+                        {type: "flag_check", flag: "flag_wearing_object_0002", value: 1, failed_response: "The door is locked."},
+                    ],
+                    actions: [
+                        {type: "move", destination: "room_0001"},
+                    ],
+                },
+            ]
+        },
+        {   desc: "A large stone statue of a warrior stands in the corner of the room.",
+            pre_discovery_checks:[],
+            commands: [
+                {
+                    desc: "Examine the statue.",
+                    match_phrases: ["examine statue","look statue","search statue"],
+                    pre_action_checks: [],
+                    actions: [
+                        {type: "response", text: "The statue is made of stone and depicts a warrior in full armor covered in a thick layer of dust. It appears to be mounted on a movable platform."},
+                        {type: "flag_set", flag: "flag.warrior_statue_examined", value: 1},
+                    ],
+                },
+                {
+                    desc: "Push the statue.",
+                    match_phrases: ["push statue","push the statue","move statue","move the statue"],
+                    pre_action_checks: [
+                        {type: "flag_check", flag: "flag.warrior_statue_pushed", value: 1, failed_response: "The statue has already been pushed aside."},
+                    ],
+                    actions: [
+                        {type: "response", text: "You push the statue and it slides easily to the side."},
+                        {type: "flag_set", flag: "flag.warrior_statue_pushed", value: 1},
+                    ],
+                }
+            ]
+        }
+    ],
+    /*
     exits: [
         { 
             cmd: ["e","east","go e","go east"],
@@ -51,7 +112,7 @@ obj_load({
     features: [
         {
             desc: "A large stone statue of a warrior stands in the corner of the room.",
-            conditions: [
+            checks: [
                 {
                     flag: "flag.warrior_statue_examined",
                     value: 1,
@@ -63,24 +124,31 @@ obj_load({
                     true_response: "The statue appears to have been pushed aside slightly to reveal a small tunnel leading downward.",
                 }
             ],
-            actions: [
+            commands: [
                 {
-                    cmd: ["examine statue","look statue","search statue"],
-                    success_actions: [
-                        {type: "response", value: "The statue is made of stone and depicts a warrior in full armor covered in a thick layer of dust. It appears to be mounted on a movable platform."},
-                        {type: "flag_set", value: "flag.warrior_statue_examined"},
+                    desc: "Examine the statue.",
+                    match_phrases: ["examine statue","look statue","search statue"],
+                    pre_action_checks: [],
+                    actions: [
+                        {type: "response", text: "The statue is made of stone and depicts a warrior in full armor covered in a thick layer of dust. It appears to be mounted on a movable platform."},
+                        {type: "flag_set", flag: "flag.warrior_statue_examined", value: 1},
                     ],
                 },
                 {
-                    cmd: ["push statue"],
-                    success_actions: [
-                        {type: "response", value: "You push the statue and it slides easily to the side."},
-                        {type: "flag_set", value: "flag.warrior_statue_pushed"},
+                    desc: "Push the statue.",
+                    match_phrases: ["push statue","push the statue","move statue","move the statue"],
+                    pre_action_checks: [
+                        {type: "flag_check", flag: "flag.warrior_statue_pushed", value: 1, failed_response: "The statue has already been pushed aside."},
+                    ],
+                    actions: [
+                        {type: "response", text: "You push the statue and it slides easily to the side."},
+                        {type: "flag_set", flag: "flag.warrior_statue_pushed", value: 1},
                     ],
                 }
             ]
         }
     ],
+    */
 });
 //================================================================================================================================================================
 obj_load({
