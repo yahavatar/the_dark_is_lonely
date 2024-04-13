@@ -12,7 +12,7 @@ obj_load({
             pre_discovery_checks:[],
             commands: [
                 {   desc: "Use East doorway",
-                    match_phrase: ["e","east","go e","go east"],
+                    match_phrases: ["e","east","go e","go east"],
                     pre_action_checks: [],
                     actions: [
                         {type: "move", destination: "room_0002"},
@@ -45,9 +45,7 @@ obj_load({
             ]
         },
         {   desc: "A plain doorway leading West.",
-            pre_discovery_checks:[
-                
-            ],
+            pre_discovery_checks:[],
             commands: [
                 {
                     desc: "Use West doorway.",
@@ -87,68 +85,6 @@ obj_load({
             ]
         }
     ],
-    /*
-    exits: [
-        { 
-            cmd: ["e","east","go e","go east"],
-            desc: "You see a small doorway leading east.",
-            dest: "room_0003",
-            checks:[],
-        },
-        {
-            cmd: ["w","west","go w","go west","open west door","open w door","open west doorway","open w doorway","open west","open w"],
-            desc: "There is a secure doorway leading West.",
-            dest: "room_0001",
-            checks:[
-                {
-                    flag: "flag_wearing_object_0002",
-                    value: 1,
-                    success: "You pass through the doorway with ease.",
-                    failure: "You cannot pass through the doorway...The door remains firmly locked.",
-                }
-            ]
-        }
-    ],
-    features: [
-        {
-            desc: "A large stone statue of a warrior stands in the corner of the room.",
-            checks: [
-                {
-                    flag: "flag.warrior_statue_examined",
-                    value: 1,
-                    true_response: "The warrior statue appears to be mounted on a movable platform.",
-                },
-                {
-                    flag: "flag.warrior_statue_pushed",
-                    value: 1,
-                    true_response: "The statue appears to have been pushed aside slightly to reveal a small tunnel leading downward.",
-                }
-            ],
-            commands: [
-                {
-                    desc: "Examine the statue.",
-                    match_phrases: ["examine statue","look statue","search statue"],
-                    pre_action_checks: [],
-                    actions: [
-                        {type: "response", text: "The statue is made of stone and depicts a warrior in full armor covered in a thick layer of dust. It appears to be mounted on a movable platform."},
-                        {type: "flag_set", flag: "flag.warrior_statue_examined", value: 1},
-                    ],
-                },
-                {
-                    desc: "Push the statue.",
-                    match_phrases: ["push statue","push the statue","move statue","move the statue"],
-                    pre_action_checks: [
-                        {type: "flag_check", flag: "flag.warrior_statue_pushed", value: 1, failed_response: "The statue has already been pushed aside."},
-                    ],
-                    actions: [
-                        {type: "response", text: "You push the statue and it slides easily to the side."},
-                        {type: "flag_set", flag: "flag.warrior_statue_pushed", value: 1},
-                    ],
-                }
-            ]
-        }
-    ],
-    */
 });
 //================================================================================================================================================================
 obj_load({
@@ -157,13 +93,22 @@ obj_load({
     desc_full: "Treasure vault..emptied aeons ago.",
     desc_visited: "Empty Treasure Vault",
     flag_visited: 0,
-    exits: [
-        { 
-            cmd: ["w","west","go w","go west","open west door","open w door","open west doorway","open w doorway","open west","open w"],
-            desc: "Secure doorway leading West.",
-            dest: "room_0002",
-
-        }
+    contents: [
+        {   desc: "A secured doorway leading West.",
+            pre_discovery_checks:[],
+            commands: [
+                {
+                    desc: "Use West doorway.",
+                    match_phrases: ["w","west","go w","go west","open west door","open w door","open west doorway","open w doorway","open west","open w"],
+                    pre_action_checks: [
+                        {type: "flag_check", flag: "flag.wearing_object_0002", value: 1, failed_response: "The door is locked."},
+                    ],
+                    actions: [
+                        {type: "move", destination: "room_0001"},
+                    ],
+                },
+            ]
+        },
     ],
     features: [],
 });
@@ -174,7 +119,7 @@ obj_load({
     desc_full: "A mouldy crypt with a stone sarcophagus in the center of the room.",
     desc_visited: "Empty Treasure Vault",
     flag_visited: 0,
-    exits: [
+    commands: [
         {
             cmd: ["w","west","go w","go west","open west door","open w door","open west doorway","open w doorway","open west","open w"],
             desc: "Secure doorway leading West.",
@@ -186,3 +131,64 @@ obj_load({
 });
 //================================================================================================================================================================
 }
+
+/*   Blank Room Template
+obj_load({
+    id: "room_0000",
+    desc_full: "Full description.",
+    desc_visited: "Short Description.",
+    flag_visited: 0,
+    contents: [
+        {   desc: "East Door Description.",
+            pre_discovery_checks:[],
+            commands: [
+                {   desc: "Use East doorway",
+                    match_phrases: ["e","east","go e","go east"],
+                    pre_action_checks: [
+                        {type: "flag_check", flag: "flag.wearing_object_0002", value: 1, failed_response: "The door is locked."},
+                    ],
+                    actions: [
+                        {type: "response", text: "You push the statue and it slides easily to the side."},
+                        {type: "flag_set", flag: "flag.warrior_statue_pushed", value: 1},
+                    ],
+                }
+            ],
+        }
+    ],
+});
+
+*/
+
+
+
+
+/*    Rooms in process
+
+room_0001
+    You find yourself at the main gate of a dilap
+
+room_0002
+
+room_0003
+
+room_0004
+
+room_0005
+
+room_0006
+
+room_0007
+
+room_0008
+
+room_0009
+
+room_0010
+
+
+
+
+
+
+
+*/

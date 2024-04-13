@@ -34,6 +34,56 @@ function parse_input(){
             return;
     }
 
+    //Check for contents
+    let room_id = lGet("current_room");
+    let room = JSON.parse(lGet(room_id));
+    let contents = room.contents;
+    for (let i = 0; i < contents.length; i++){
+        console.log("contents: ", contents[i].desc);
+        for (let j = 0; j < contents[i].commands.length; j++){
+            console.log("command: ", contents[i].commands[j].desc);
+            for (let k = 0; k < contents[i].commands[j].match_phrases.length; k++){
+                let match_phrase = contents[i].commands[j].match_phrases[k];
+                console.log("match_phrase:", match_phrase);
+                if (input == match_phrase){
+                    took_action = 1;
+                    //Make sure no pre-action checks fail
+                    let pre_action_checks = contents[i].commands[j].pre_action_checks;
+                    for (let l = 0; l < pre_action_checks.length; l++){
+                        let check = pre_action_checks[l];
+                        switch(check.type){
+                            case "flag_check":
+                                if (lGet(check.flag) == check.value){
+                                    response_show(check.failed_response);
+                                    return;
+                                }
+                                break;
+                        }
+                    }
+                    //Execute all actions
+                    let actions = contents[i].commands[j].actions;
+                    for (let l = 0; l < actions.length; l++){
+                        let action = actions[l];
+                        switch(action.type){
+                            case "response":
+                                response_show(action.text);
+                                break;
+                            case "flag_set":
+                                lSet(action.flag, action.value);
+                                break;
+                            case "move":
+                                lSet("current_room", action.destination);
+                                room_look();
+                                return;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+    /*
     //Check for exit commands:
     let room_id = lGet("current_room");
     let room = JSON.parse(lGet(room_id));
@@ -95,6 +145,8 @@ function parse_input(){
             }
         }
     }
+    */
+
     if (took_action == 1){ return; }
     response_show("That command is unknown or meaningless at this time...");
 
@@ -113,6 +165,29 @@ function room_look(){
     
     let response = room.desc_full;
 
+    //Add all content descriptions to the response
+    let contents = room.contents;
+    for (let i = 0; i < contents.length; i++){
+        console.log("contents: ", contents[i].desc);
+        //Make sure there are no pre-discovery checks that fail
+        let pre_discovery_checks = contents[i].pre_discovery_checks;
+        for (let j = 0; j < pre_discovery_checks.length; j++){
+            let check = pre_discovery_checks[j];
+            console.log("pre_discovery check: ", check);
+            switch(check.type){
+                case "flag_check":
+                    if (lGet(check.flag) == check.value){
+                        response += " " + check.failed_response;
+                        return;
+                    }
+                    break;
+            }
+        }
+        //response += " " + contents[i].desc;
+    }
+
+
+    /*
     //Add all exit descriptions to the response
     let exits = room.exits;
     for (let i = 0; i < exits.length; i++){
@@ -134,6 +209,7 @@ function room_look(){
             }
         }
     }
+    */
 
     response_show(response);
 }
