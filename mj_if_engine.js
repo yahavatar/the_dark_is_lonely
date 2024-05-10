@@ -83,7 +83,14 @@ function parse_input(){
     }
 
     if (took_action == 1){ return; }
-    response_show("That command is unknown or meaningless at this time...");
+
+    //Respone to unknown command
+    let responses = [
+        "No can do...", "I don't understand...", "That's not possible...", "I don't know how to do that...", "I'm not sure what you mean...", "I can't do that...",
+        "I'm not sure what you're asking...", "Really...?", "I can't.", "That was pointless...", "Exactly how am I supposed to do that?", "You're kidding right...?",
+        "Seriously...?", "Ummmmm, no...", "You can't be serious...", "I'm sure that might work...somewhere...", "Impossible..."
+    ];
+    response_show(shuffleArray(responses)[0]);
 
 }
 function obj_load(obj){
@@ -157,6 +164,13 @@ function response_show(message){
     let history = document.getElementById("history");
     history.innerHTML += "<br>" + message
 
+}
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array
 }
 function user_input_clear(){
     document.getElementById("user-input").value = "";
