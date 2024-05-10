@@ -49,7 +49,7 @@ obj_load({
             commands: [
                 {
                     desc: "Use West doorway.",
-                    match_phrases: ["w","west","go w","go west","open west door","open w door","open west doorway","open w doorway","open west","open w"],
+                    match_phrases: ["w","west","go w","go west"],
                     pre_action_checks: [
                         {type: "flag_check", flag: "flag_wearing_object_0002", value: 1, failed_response: "The door is locked."},
                     ],
@@ -99,7 +99,7 @@ obj_load({
             commands: [
                 {
                     desc: "Use West doorway.",
-                    match_phrases: ["w","west","go w","go west","open west door","open w door","open west doorway","open w doorway","open west","open w"],
+                    match_phrases: ["w","west","go w","go west"],
                     pre_action_checks: [
                         {type: "flag_check", flag: "flag.wearing_object_0002", value: 1, failed_response: "The door is locked."},
                     ],
@@ -109,8 +109,7 @@ obj_load({
                 },
             ]
         },
-    ],
-    features: [],
+    ]
 });
 //================================================================================================================================================================
 obj_load({
@@ -119,15 +118,15 @@ obj_load({
     desc_full: "A mouldy crypt with a stone sarcophagus in the center of the room.",
     desc_visited: "Empty Treasure Vault",
     flag_visited: 0,
-    commands: [
-        {
-            cmd: ["w","west","go w","go west","open west door","open w door","open west doorway","open w doorway","open west","open w"],
-            desc: "Secure doorway leading West.",
-            dest: "room_0002",
-
+    contents: [
+        {   desc: "A roughly circular hole in the ceiling leading up.",
+            match_phrases: ["u","up","go u","go up"],
+            pre_action_checks: [],
+            actions: [
+                { type: "move", destination: "room_0002"},
+            ],
         }
-    ],
-    features: [],
+    ]
 });
 //================================================================================================================================================================
 }
